@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Heart, Music, PauseCircle, PlayCircle, Gift } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Heart, Music, PauseCircle, PlayCircle, Gift, Star, Coffee, Sparkles } from 'lucide-react';
 import * as THREE from 'three';
 
 function App() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isRevealed, setIsRevealed] = useState(false);
+  const [currentCard, setCurrentCard] = useState(0);
   const [audio] = useState(new Audio('/audio/background-music.mp3'));
   const mountRef = useRef(null);
 
@@ -34,9 +34,8 @@ function App() {
     }
   };
 
-  const handleReveal = async () => {
-    if (!isRevealed) {
-      setIsRevealed(true);
+  const handleNextCard = async () => {
+    if (currentCard === 0) {
       try {
         await audio.play();
         setIsPlaying(true);
@@ -44,6 +43,7 @@ function App() {
         console.error('Error playing audio:', error);
       }
     }
+    setCurrentCard(prev => prev + 1);
   };
 
   // Three.js Setup
@@ -117,39 +117,48 @@ function App() {
     };
   }, []);
 
-  return (
-    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-      <div ref={mountRef} className="absolute inset-0 z-0" />
-
-      <div className="w-full max-w-lg relative z-10">
-        <button
-          onClick={toggleMusic}
-          className="fixed top-4 right-4 z-50 text-pink-400 hover:text-pink-300 transition-colors"
-          aria-label="Toggle music"
-        >
-          {isPlaying ? (
-            <PauseCircle size={32} />
-          ) : (
-            <div className="flex items-center gap-2">
-              <Music size={32} />
-              <span className="text-sm hidden sm:inline text-gray-200">Music</span>
-            </div>
-          )}
-        </button>
-
-        {!isRevealed ? (
-          <button
-            onClick={handleReveal}
-            className="w-full bg-gradient-to-r from-pink-600 to-pink-400 rounded-3xl shadow-xl p-8 text-white hover:from-pink-500 hover:to-pink-300 transition-all transform hover:scale-105 cursor-pointer relative overflow-hidden border-2 border-gray-200"
-          >
+  const renderCard = () => {
+    switch (currentCard) {
+      case 0:
+        return (
+          <div className="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-3xl shadow-xl p-8 text-white transform transition-all hover:scale-105 cursor-pointer relative overflow-hidden border-2 border-gray-200">
             <div className="text-center relative z-10">
-              <Gift size={64} className="mx-auto mb-4 animate-bounce text-white" />
-              <p className="text-2xl sm:text-3xl font-bold drop-shadow-lg">Click to Open</p>
-              <p className="text-sm sm:text-base mt-2 opacity-75">A romantic surprise awaits you...</p>
+              <Coffee size={64} className="mx-auto mb-4 animate-bounce text-white" />
+              <h2 className="text-2xl sm:text-3xl font-bold mb-4">For Your Hard Work</h2>
+              <p className="text-lg mb-6">I see how tirelessly you work every day, putting your heart and soul into everything you do. Your dedication is truly inspiring.</p>
+              <button
+                onClick={handleNextCard}
+                className="bg-white text-purple-600 px-6 py-2 rounded-full font-semibold hover:bg-opacity-90 transition-all"
+              >
+                Next Message
+              </button>
             </div>
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/confetti.png')] opacity-10" />
-          </button>
-        ) : (
+            <div className="absolute top-0 right-0 p-4">
+              <Star className="w-8 h-8 text-yellow-300 animate-pulse" fill="currentColor" />
+            </div>
+          </div>
+        );
+      case 1:
+        return (
+          <div className="bg-gradient-to-r from-pink-500 to-rose-500 rounded-3xl shadow-xl p-8 text-white transform transition-all hover:scale-105 cursor-pointer relative overflow-hidden border-2 border-gray-200">
+            <div className="text-center relative z-10">
+              <Sparkles size={64} className="mx-auto mb-4 animate-bounce text-white" />
+              <h2 className="text-2xl sm:text-3xl font-bold mb-4">You're Amazing!</h2>
+              <p className="text-lg mb-6">Your strength, resilience, and beautiful spirit make the world a brighter place. Never forget how special you are.</p>
+              <button
+                onClick={handleNextCard}
+                className="bg-white text-pink-500 px-6 py-2 rounded-full font-semibold hover:bg-opacity-90 transition-all"
+              >
+                See Birthday Surprise
+              </button>
+            </div>
+            <div className="absolute top-0 right-0 p-4">
+              <Heart className="w-8 h-8 text-red-300 animate-pulse" fill="currentColor" />
+            </div>
+          </div>
+        );
+      case 2:
+        return (
           <div className="bg-white rounded-3xl shadow-2xl overflow-hidden animate-[fadeIn_0.5s_ease-in] relative border-2 border-gray-300">
             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/confetti.png')] opacity-5" />
 
@@ -210,7 +219,33 @@ function App() {
               </p>
             </div>
           </div>
-        )}
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
+      <div ref={mountRef} className="absolute inset-0 z-0" />
+
+      <div className="w-full max-w-lg relative z-10">
+        <button
+          onClick={toggleMusic}
+          className="fixed top-4 right-4 z-50 text-pink-400 hover:text-pink-300 transition-colors"
+          aria-label="Toggle music"
+        >
+          {isPlaying ? (
+            <PauseCircle size={32} />
+          ) : (
+            <div className="flex items-center gap-2">
+              <Music size={32} />
+              <span className="text-sm hidden sm:inline text-gray-200">Music</span>
+            </div>
+          )}
+        </button>
+
+        {renderCard()}
       </div>
 
       <style jsx>{`
