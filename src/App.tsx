@@ -190,7 +190,7 @@ function App() {
 
             <div className="p-6 sm:p-8 text-center relative z-10 bg-white">
               <h1 className="text-3xl sm:text-4xl font-extrabold text-pink-600 mb-4 animate-[pulse_2s_infinite] drop-shadow-md">
-                Happy Birthday, My Dearest Keysa! 🎉
+                Happy Birthday, My Dearest Nopii! 🎉
               </h1>
 
               <div className="space-y-4 text-gray-800 text-sm sm:text-base">
