@@ -10,8 +10,6 @@ function App() {
 
   const birthdayPhotos = [
     '/image/photo1.jpeg',
-    '/image/photo2.jpeg',
-    '/image/photo3.jpeg'
   ];
 
   useEffect(() => {
